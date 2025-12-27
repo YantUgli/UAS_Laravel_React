@@ -21,18 +21,23 @@ Route::get('/', function () {
     ]);
 });
 
-// Dahsboard
-Route::middleware(['auth', 'verified'])->group(function () {
-
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
-
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/products', function () {
+        return Inertia::render('Admin/Products');
+    })->name('admin.products');
 });
 
-// Profile
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/cart', function () {
+        return Inertia::render('Cart/Index');
+    })->name('cart');
+
+    Route::get('/transactions', function () {
+        return Inertia::render('Transactions/Index');
+    })->name('transactions');
+
+
+     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
