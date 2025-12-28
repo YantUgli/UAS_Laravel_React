@@ -57,7 +57,8 @@
 <body>
 
     <div class="header">
-        <h1>UAS_[Nama Kamu]</h1>
+        <img src="{{ $appConfig['logoUrl'] }}" alt="Logo" class="logo">
+        <h1>{{ $appConfig['name'] }}</h1>
         <h2>Bukti Transaksi #{{ $transaction->id }}</h2>
     </div>
 
@@ -108,7 +109,7 @@
     </div>
 
     <div class="footer">
-        <p>Terima kasih telah berbelanja di UAS_[Nama Kamu]!</p>
+        <p>Terima kasih telah berbelanja di {{ $appConfig['name'] }}!</p>
         <p>Dicetak pada: {{ \Carbon\Carbon::now()->format('d F Y H:i') }}</p>
     </div>
 

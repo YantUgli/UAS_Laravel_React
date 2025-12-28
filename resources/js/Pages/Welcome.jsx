@@ -3,6 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Navbar from '../Components/Navbar';
+import AppHead from '@/Components/AppHead';
 
 export default function Welcome({ auth, laravelVersion, phpVersion }) {
     const [products, setProducts] = useState([]);
@@ -14,7 +15,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
 
     return (
         <>
-            <Head title="Home" />
+            <AppHead title="home" />
             <Navbar />
             <section className="max-w-7xl mx-auto px-6 py-16">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

@@ -1,16 +1,24 @@
 import { Link, usePage } from '@inertiajs/react';
-import { ShoppingCart, ChevronDown, BadgeCent } from 'lucide-react'; // Pakai Lucide untuk cart & chevron
+import { ShoppingCart, ChevronDown, BadgeCent } from 'lucide-react';
 import { useState } from 'react';
+import AppConfig from '@/config/app';
 
 export default function Navbar() {
     const { url, props } = usePage();
     const { auth } = props;
     const user = auth?.user;
 
-    const [dropdownOpen, setDropdownOpen] = useState(false); // State untuk dropdown
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
-    const isActive = (path) => {
-        return url.startsWith(path) ? 'bg-indigo-700 text-white' : 'text-gray-300 hover:bg-indigo-600 hover:text-white';
+    const isActive = (path, exact = false) => {
+        if (exact) {
+            return url === path
+                ? 'bg-indigo-700 text-white'
+                : 'text-gray-300 hover:bg-indigo-600 hover:text-white';
+        }
+        return url.startsWith(path)
+            ? 'bg-indigo-700 text-white'
+            : 'text-gray-300 hover:bg-indigo-600 hover:text-white';
     };
 
     return (
@@ -22,11 +30,11 @@ export default function Navbar() {
                         <Link href="/" className="flex items-center text-white font-bold text-xl">
                             {/* Logo Home dari gambar online (white minimalist) */}
                             <img
-                                src="https://www.shutterstock.com/image-vector/minimalist-home-icon-logo-modern-260nw-2515870147.jpg"
+                                src={AppConfig.logoUrl}
                                 alt="Home"
                                 className="w-10 h-10 mr-3 object-contain rounded-full"
                             />
-                            UAS_[Nama Kamu]
+                            {AppConfig.navbarTitle}
                         </Link>
 
                         {/* Menu Links - Desktop */}
@@ -34,7 +42,7 @@ export default function Navbar() {
                             <div className="flex gap-3">
                                 <Link
                                     href="/"
-                                    className={`px-3 py-2 rounded-md text-sm font-medium transition duration-200 ${isActive('/')}`}
+                                    className={`px-3 py-2 rounded-md text-sm font-medium transition duration-200 ${isActive('/', true)}`}
                                 >
                                     Home
                                 </Link>
@@ -55,7 +63,7 @@ export default function Navbar() {
                                     <>
                                         <Link
                                             href="/transactions"
-                                            className={`px-3 py-2 rounded-md text-sm font-medium transition duration-200 flex items-center gap-1 ${isActive('/transaction')}`}
+                                            className={`px-3 py-2 rounded-md text-sm font-medium transition duration-200 flex items-center gap-1 ${isActive('/transactions')}`}
                                         >
                                             <BadgeCent className="w-5 h-5" />
                                             Transaksi
@@ -90,7 +98,7 @@ export default function Navbar() {
                                     {dropdownOpen && (
                                         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50">
                                             <Link
-                                                href="/profile/edit"
+                                                href="/profile"
                                                 className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                                                 onClick={() => setDropdownOpen(false)}
                                             >

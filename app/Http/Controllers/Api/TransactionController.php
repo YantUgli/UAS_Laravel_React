@@ -83,15 +83,22 @@ class TransactionController extends Controller
         return $transaction;
     }
 
-    public function print(Transaction $transaction)
+  public function print(Transaction $transaction)
 {
-    $user = Auth::user();
-
-    if ($user->role !== 'admin' && $transaction->user_id !== $user->id) {
+    // Cek akses
+    if (auth()->user()->role !== 'admin' && $transaction->user_id !== auth()->id()) {
         abort(403);
     }
 
-    $pdf = PDF::loadView('pdf.transaction', ['transaction' => $transaction->load('items.product', 'user')]);
+    $transaction->load('items.product', 'user');
+
+    // Ambil dari config PHP yang sudah sync
+    $appConfig = config('app_config');
+
+    $pdf = Pdf::loadView('pdf.transaction', [
+        'transaction' => $transaction,
+        'appConfig' => $appConfig
+    ]);
 
     return $pdf->download('bukti-transaksi-' . $transaction->id . '.pdf');
 }

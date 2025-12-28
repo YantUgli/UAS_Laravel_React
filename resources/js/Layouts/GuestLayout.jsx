@@ -1,5 +1,7 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
 import { Link } from '@inertiajs/react';
+import AppConfig from '@/config/app';
+
 
 export default function GuestLayout({ children }) {
     return (
@@ -7,7 +9,7 @@ export default function GuestLayout({ children }) {
             <div>
                 <Link href="/">
                     <img
-                        src="https://www.shutterstock.com/image-vector/minimalist-home-icon-logo-modern-260nw-2515870147.jpg"
+                        src={AppConfig.logoUrl}
                         alt="Home"
                         className="w-20 h-20 mr-3 object-contain rounded-full"
                     />

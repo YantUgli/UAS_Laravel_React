@@ -3,6 +3,7 @@ import { Head, usePage } from '@inertiajs/react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { FileText, User, Calendar, Download } from 'lucide-react';
+import AppHead from '@/Components/AppHead';
 
 export default function TransactionsIndex() {
     const { auth } = usePage().props;
@@ -42,7 +43,8 @@ export default function TransactionsIndex() {
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Riwayat Transaksi" />
+            <AppHead title="Transaction" />
+
 
             <div className="max-w-7xl mx-auto px-6 py-12">
                 <h1 className="text-3xl font-bold mb-8 flex items-center gap-3">

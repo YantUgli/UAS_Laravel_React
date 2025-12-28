@@ -19,12 +19,12 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('home');
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/products', function () {
-        return Inertia::render('Admin/Products');
-    })->name('admin.products');
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
