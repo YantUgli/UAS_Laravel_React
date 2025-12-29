@@ -9,6 +9,21 @@ const AppConfig = {
     // buat folder images
     // masukan foto kedalam folder public/images
     logoUrl: '/images/logo.png',
+
+    // warna navbar
+    navbarBackground: '#1E293B',
+    navbarText: '#FFFFFF',
+    navbarActive: '#4338CA',
+    navbarHover: '#4F46E5',
+
+    // warna card product
+
+    productPrice: '#4F46E5',
+    productButtonBg: '#4F46E5',
+    productButtonHover: '#4338CA',
+    productButtonText: '#FFFFFF',
+
+
 };
 
 export default AppConfig;

@@ -1,6 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
 import { ShoppingCart, ChevronDown, BadgeCent } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AppConfig from '@/config/app';
 
 export default function Navbar() {
@@ -9,20 +9,22 @@ export default function Navbar() {
     const user = auth?.user;
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [mobileOpen, setMobileOpen] = useState(false);
 
     const isActive = (path, exact = false) => {
-        if (exact) {
-            return url === path
-                ? 'bg-indigo-700 text-white'
-                : 'text-gray-300 hover:bg-indigo-600 hover:text-white';
-        }
-        return url.startsWith(path)
-            ? 'bg-indigo-700 text-white'
-            : 'text-gray-300 hover:bg-indigo-600 hover:text-white';
+        return exact ? url === path : url.startsWith(path);
     };
 
+    useEffect(() => {
+        const root = document.documentElement;
+        root.style.setProperty('--navbar-bg', AppConfig.navbarBackground);
+        root.style.setProperty('--navbar-text', AppConfig.navbarText);
+        root.style.setProperty('--navbar-active', AppConfig.navbarActive);
+        root.style.setProperty('--navbar-hover', AppConfig.navbarHover);
+    }, []);
+
     return (
-        <nav className="bg-indigo-800 shadow-lg">
+        <nav className="bg-[var(--navbar-bg)] text-[var(--navbar-text)] shadow-lg">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16 gap-8">
                     {/* Logo / Brand */}
@@ -42,7 +44,12 @@ export default function Navbar() {
                             <div className="flex gap-3">
                                 <Link
                                     href="/"
-                                    className={`px-3 py-2 rounded-md text-sm font-medium transition duration-200 ${isActive('/', true)}`}
+                                    className={`
+                                            px-3 py-2 rounded-md text-sm font-medium transition
+                                                ${isActive('/', true)
+                                            ? 'bg-[var(--navbar-active)] text-white'
+                                            : 'text-gray-300 hover:bg-[var(--navbar-hover)] hover:text-white'}
+    `}
                                 >
                                     Home
                                 </Link>
@@ -51,7 +58,12 @@ export default function Navbar() {
                                 {user?.role === 'user' && (
                                     <Link
                                         href="/cart"
-                                        className={`px-3 py-2 rounded-md text-sm font-medium transition duration-200 flex items-center gap-2 ${isActive('/cart')}`}
+                                        className={`
+        px-3 py-2 rounded-md text-sm font-medium transition flex items-center gap-2
+        ${isActive('/cart')
+                                                ? 'bg-[var(--navbar-active)] text-white'
+                                                : 'text-gray-300 hover:bg-[var(--navbar-hover)] hover:text-white'}
+    `}
                                     >
                                         <ShoppingCart className="w-5 h-5" />
                                         Keranjang
@@ -63,14 +75,24 @@ export default function Navbar() {
                                     <>
                                         <Link
                                             href="/transactions"
-                                            className={`px-3 py-2 rounded-md text-sm font-medium transition duration-200 flex items-center gap-1 ${isActive('/transactions')}`}
+                                            className={`
+        px-3 py-2 rounded-md text-sm font-medium transition flex items-center gap-2
+        ${isActive('/transactions')
+                                                    ? 'bg-[var(--navbar-active)] text-white'
+                                                    : 'text-gray-300 hover:bg-[var(--navbar-hover)] hover:text-white'}
+    `}
                                         >
                                             <BadgeCent className="w-5 h-5" />
                                             Transaksi
                                         </Link>
                                         <Link
                                             href="/dashboard"
-                                            className={`px-3 py-2 rounded-md text-sm font-medium transition duration-200 ${isActive('/dashboard')}`}
+                                            className={`
+        px-3 py-2 rounded-md text-sm font-medium transition flex items-center gap-2
+        ${isActive('/dashboard')
+                                                    ? 'bg-[var(--navbar-active)] text-white'
+                                                    : 'text-gray-300 hover:bg-[var(--navbar-hover)] hover:text-white'}
+    `}
                                         >
                                             Dashboard Admin
                                         </Link>
@@ -141,12 +163,98 @@ export default function Navbar() {
 
                     {/* Mobile menu button */}
                     <div className="md:hidden">
-                        <button className="text-gray-300 hover:text-white">
+                        <button className="text-gray-300 hover:text-white"
+                            onClick={() => setMobileOpen(!mobileOpen)}
+                        >
                             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
                     </div>
+
+                    {mobileOpen && (
+                        <div className="md:hidden px-4 pb-4 space-y-2">
+                            <Link
+                                href="/"
+                                className={`block px-3 py-2 rounded-md text-sm font-medium
+                ${isActive('/', true)
+                                        ? 'bg-[var(--navbar-active)] text-white'
+                                        : 'text-gray-300 hover:bg-[var(--navbar-hover)] hover:text-white'}
+            `}
+                                onClick={() => setMobileOpen(false)}
+                            >
+                                Home
+                            </Link>
+
+                            {/* User */}
+                            {user?.role === 'user' && (
+                                <Link
+                                    href="/cart"
+                                    className={`block px-3 py-2 rounded-md text-sm font-medium
+                    ${isActive('/cart')
+                                            ? 'bg-[var(--navbar-active)] text-white'
+                                            : 'text-gray-300 hover:bg-[var(--navbar-hover)] hover:text-white'}
+                `}
+                                    onClick={() => setMobileOpen(false)}
+                                >
+                                    Keranjang
+                                </Link>
+                            )}
+
+                            {/* Admin */}
+                            {user?.role === 'admin' && (
+                                <>
+                                    <Link
+                                        href="/transactions"
+                                        className="block px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-[var(--navbar-hover)] hover:text-white"
+                                        onClick={() => setMobileOpen(false)}
+                                    >
+                                        Transaksi
+                                    </Link>
+                                    <Link
+                                        href="/dashboard"
+                                        className="block px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-[var(--navbar-hover)] hover:text-white"
+                                        onClick={() => setMobileOpen(false)}
+                                    >
+                                        Dashboard Admin
+                                    </Link>
+                                </>
+                            )}
+
+                            {/* AUTH MOBILE */}
+                            {!user && (
+                                <>
+                                    <Link
+                                        href="/login"
+                                        className="block px-3 py-2 rounded-md text-sm text-gray-300 hover:bg-[var(--navbar-hover)] hover:text-white"
+                                        onClick={() => setMobileOpen(false)}
+                                    >
+                                        Login
+                                    </Link>
+                                    <Link
+                                        href="/register"
+                                        className="block px-3 py-2 rounded-md text-sm bg-white text-indigo-800"
+                                        onClick={() => setMobileOpen(false)}
+                                    >
+                                        Register
+                                    </Link>
+                                </>
+                            )}
+
+                            {/* Logout */}
+                            {user && (
+                                <Link
+                                    href={route('logout')}
+                                    method="post"
+                                    as="button"
+                                    className="block w-full text-left px-3 py-2 rounded-md text-sm text-red-400 hover:bg-red-500/10"
+                                    onClick={() => setMobileOpen(false)}
+                                >
+                                    Logout
+                                </Link>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </nav>

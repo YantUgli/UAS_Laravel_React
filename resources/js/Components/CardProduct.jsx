@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { usePage, router } from '@inertiajs/react';
-import { ShoppingBag } from 'lucide-react'; // Icon bag biru dari Lucide
+import { ShoppingBag } from 'lucide-react';
+import AppConfig from '@/config/app';
+import { useEffect } from 'react';
 
 export default function ProductCard({ product }) {
-    const { auth } = usePage().props; // Ambil auth dari Inertia props
+    const { auth } = usePage().props;
     const user = auth?.user;
 
     const rupiah = (number) => {
@@ -13,6 +15,14 @@ export default function ProductCard({ product }) {
             minimumFractionDigits: 0,
         }).format(number);
     };
+
+    useEffect(() => {
+        const root = document.documentElement;
+        root.style.setProperty('--product-price', AppConfig.productPrice);
+        root.style.setProperty('--product-btn', AppConfig.productButtonBg);
+        root.style.setProperty('--product-btn-hover', AppConfig.productButtonHover);
+        root.style.setProperty('--product-btn-text', AppConfig.productButtonText);
+    }, []);
 
     const addToCart = async () => {
         if (!user) {
@@ -58,7 +68,7 @@ export default function ProductCard({ product }) {
                 <h3 className="font-semibold text-lg mb-2 line-clamp-2">
                     {product.name}
                 </h3>
-                <p className="text-indigo-600 font-bold text-xl mb-3">
+                <p className="text-[var(--product-price)] font-bold text-xl mb-3">
                     {rupiah(product.price)}
                 </p>
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
@@ -68,7 +78,15 @@ export default function ProductCard({ product }) {
                 {/* Tombol Tambah ke Keranjang */}
                 <button
                     onClick={addToCart}
-                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition duration-200"
+                    className="
+    w-full
+    bg-[var(--product-btn)]
+    hover:bg-[var(--product-btn-hover)]
+    text-[var(--product-btn-text)]
+    font-medium py-3 px-4 rounded-lg
+    flex items-center justify-center gap-2
+    transition duration-200
+"
                 >
                     <ShoppingBag className="w-5 h-5" />
                     Tambah ke Keranjang
